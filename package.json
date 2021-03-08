@@ -9,20 +9,27 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run clean && npm run compile",
+    "build": "npm run clean && npm run compile && npm run pack",
+    "pack": "webpack --config webpack.config.js",
     "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
     "compile": "tsc -b tsconfig.json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@pipcook/boa": "^1.1.0",
-    "@pipcook/pipcook-core": "^1.1.0"
+    "@pipcook/pipcook-core": "^1.1.0",
+    "fs-extra": "^9.1.0",
+    "lodash": "^4.17.21"
   },
   "gitHead": "53e131a069b3112a74ae5d99aa1ab08bec768c7e",
   "devDependencies": {
+    "@types/fs-extra": "^9.0.8",
     "@types/jasmine": "^3.5.7",
-    "nyc": "14.1.1"
+    "@types/lodash": "^4.14.168",
+    "nyc": "14.1.1",
+    "webpack": "^5.24.3",
+    "webpack-cli": "^4.5.0",
+    "webpack-node-externals": "^2.5.2"
   },
   "publishConfig": {
     "access": "public"
@@ -30,12 +37,5 @@
   "pipcook": {
     "category": "modelDefine",
     "datatype": "text"
-  },
-  "conda": {
-    "python": "3.7",
-    "dependencies": {
-      "jieba": "0.42.1",
-      "scikit-learn": "0.23.2"
-    }
   }
 }
