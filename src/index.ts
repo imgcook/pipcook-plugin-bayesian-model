@@ -1,11 +1,9 @@
 /**
  * @file This is for the plugin to load Bayes Classifier model.
  */
-
-import { UniModel, CsvDataset } from '@pipcook/pipcook-core';
-import * as assert from 'assert';
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import { Runtime } from '@pipcook/pipcook-core';
 import {
   getBayesModel,
   loadModel,
@@ -23,8 +21,8 @@ import { cn, en } from './stopwords';
  * @param data Pipcook uniform sample data
  * @param args args. If the model path is provided, it will restore the model previously saved
  */
-const modelDefine = async (options: Record<string, any>, api: any): Promise<any> => {
-  const { boa } = api;
+const modelDefine = async (runtime: Runtime<string>, options: Record<string, any>, context: any): Promise<any> => {
+  const { boa } = context;
   const sys = boa.import('sys');
   const {
     recoverPath
@@ -47,12 +45,12 @@ const modelDefine = async (options: Record<string, any>, api: any): Promise<any>
  * @param data Pipcook uniform data
  * @param model Eshcer model
  */
-const modelTrain = async (option: Record<string, any>, api: any, model: any): Promise<UniModel> => {
+const modelTrain = async (runtime: Runtime<string>, option: Record<string, any>, context: any, model: any): Promise<any> => {
   const {
     modelPath,
     mode = 'cn'
   } = option;
-  const { boa } = api;
+  const { boa } = context;
   const sys = boa.import('sys');
 
   sys.path.insert(0, path.join(__dirname, 'assets'));
@@ -61,11 +59,11 @@ const modelTrain = async (option: Record<string, any>, api: any, model: any): Pr
 
   const rawData = [];
   const rawClass = [];
-  let sample = await api.dataSource.nextTrain();
+  let sample = await runtime.dataSource.train.next();
   while (sample) {
     rawData.push(sample.data);
-    rawClass.push(sample.label);
-    sample = await api.dataSource.nextTrain();
+    rawClass.push(sample.label.toString());
+    sample = await runtime.dataSource.train.next();
   };
   const text_list = TextProcessing(rawData, rawClass, boa);
 
@@ -80,8 +78,8 @@ const modelTrain = async (option: Record<string, any>, api: any, model: any): Pr
   return classifier;
 };
 
-const main = async(options: Record<string, any>, api: any) => {
-  let model = await modelDefine(options, api);
-  model = await modelTrain(options, api, model);
+const main = async(runtime: Runtime<string>, options: Record<string, any>, context: any) => {
+  let model = await modelDefine(runtime, options, context);
+  model = await modelTrain(runtime, options, context, model);
 };
 export default main;
