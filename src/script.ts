@@ -111,7 +111,7 @@ export const save_all_words_list = function(feature_words: any, filepath: string
   });
 };
 
-export const saveBayesModel = async function(classifier: any, filepath: string, boa: any) {
+export const saveBayesModel = function(classifier: any, filepath: string, boa: any) {
   const pickle = boa.import('pickle');
 
   const { open } = boa.builtins();
