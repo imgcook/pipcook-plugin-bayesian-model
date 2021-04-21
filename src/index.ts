@@ -59,11 +59,13 @@ const modelTrain = async (runtime: Runtime<string>, option: Record<string, any>,
 
   const rawData = [];
   const rawClass = [];
-  let sample = await runtime.dataSource.train.next();
+  // @ts-ignore
+  let sample = await runtime.dataset.train.next();
   while (sample) {
     rawData.push(sample.data);
     rawClass.push(sample.label.toString());
-    sample = await runtime.dataSource.train.next();
+    // @ts-ignore
+    sample = await runtime.dataset.train.next();
   };
   const text_list = TextProcessing(rawData, rawClass, boa);
 
